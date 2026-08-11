@@ -1,6 +1,6 @@
 name: CruiserParts
-projectFormat: xcode15_3
 options:
+  projectFormat: xcode15_3
   bundleIdPrefix: net.cruiserparts
   deploymentTarget:
     iOS: "17.0"
