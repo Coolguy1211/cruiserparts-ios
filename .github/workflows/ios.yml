@@ -18,8 +18,16 @@ jobs:
         run: xcodebuild -project CruiserParts.xcodeproj -scheme CruiserParts -sdk iphonesimulator -configuration Debug -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
       - name: Package simulator app
         run: ditto -c -k --sequesterRsrc --keepParent build/Build/Products/Debug-iphonesimulator/CruiserParts.app CruiserParts-simulator.zip
-      - name: Upload build artifact
+      - name: Build unsigned iPhoneOS app
+        run: xcodebuild -project CruiserParts.xcodeproj -scheme CruiserParts -sdk iphoneos -configuration Release -derivedDataPath device-build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+      - name: Package device IPA
+        run: |
+          rm -rf Payload CruiserParts-unsigned.ipa
+          mkdir Payload
+          cp -R device-build/Build/Products/Release-iphoneos/CruiserParts.app Payload/CruiserParts.app
+          /usr/bin/zip -qry CruiserParts-unsigned.ipa Payload
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CruiserParts-iOS-simulator
-          path: CruiserParts-simulator.zip
+          name: CruiserParts-iOS-ipa
+          path: CruiserParts-unsigned.ipa
