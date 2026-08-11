@@ -1,4 +1,5 @@
 name: CruiserParts
+projectFormat: xcode15_3
 options:
   bundleIdPrefix: net.cruiserparts
   deploymentTarget:
