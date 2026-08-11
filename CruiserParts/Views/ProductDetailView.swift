@@ -1,0 +1,7 @@
+import SwiftUI
+
+struct ProductDetailView: View {
+    @EnvironmentObject private var store: CatalogStore
+    let product: Product
+    var body: some View { ScrollView { VStack(alignment: .leading, spacing: 18) { AsyncImage(url: CatalogClient.shared.imageURL(product.image)) { phase in if let image = phase.image { image.resizable().scaledToFit() } else { ProgressView() } }.frame(maxWidth: .infinity).frame(height: 260).background(Color.white, in: RoundedRectangle(cornerRadius: 18)); Text("LIVE CRUISERPARTS ITEM").font(.caption.bold()).tracking(1.2).foregroundStyle(Color(red: 0.41, green: 0.47, blue: 0.025)); Text(product.name).font(.system(size: 36, weight: .heavy, design: .rounded)); Text(product.price.isEmpty ? "See current price" : product.price).font(.title.bold()); Text(product.description.isEmpty ? "Live product listing from CruiserParts." : product.description).foregroundStyle(.secondary).lineSpacing(4); Button(store.isSaved(product) ? "Saved to build list" : "+ Save to build list") { store.toggleSaved(product) }.buttonStyle(.borderedProminent).tint(Color(red: 0.78, green: 0.294, blue: 0.149)).frame(maxWidth: .infinity).controlSize(.large); Button("Fitment help") { } .buttonStyle(.bordered).frame(maxWidth: .infinity).controlSize(.large) }.padding(16) }.background(Color(red: 0.96, green: 0.953, blue: 0.918).ignoresSafeArea()).navigationTitle("Part detail").navigationBarTitleDisplayMode(.inline) }
+}

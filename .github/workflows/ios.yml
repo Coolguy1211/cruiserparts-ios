@@ -1,0 +1,25 @@
+name: Build iOS app
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Build unsigned simulator app
+        run: xcodebuild -project CruiserParts.xcodeproj -scheme CruiserParts -sdk iphonesimulator -configuration Debug -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - name: Package simulator app
+        run: ditto -c -k --sequesterRsrc --keepParent build/Build/Products/Debug-iphonesimulator/CruiserParts.app CruiserParts-simulator.zip
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CruiserParts-iOS-simulator
+          path: CruiserParts-simulator.zip
