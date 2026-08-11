@@ -46,7 +46,7 @@ final class CatalogStore: ObservableObject {
                 products = response.products; cache[query] = response.products
                 sourceLabel = response.cache == "hit" ? "Server cache" : "Live shop"
                 updateRecommendations(); isLoading = false
-            } catch { error = "The live catalog is unavailable. Check that the CruiserParts LAN adapter is running."; isLoading = false }
+            } catch { self.error = "The live catalog is unavailable. Check that the CruiserParts LAN adapter is running."; isLoading = false }
         }
     }
 
@@ -66,7 +66,7 @@ final class CatalogStore: ObservableObject {
         recommendations = products.filter { !saved.contains($0) }.map { p in
             let text = (p.name + " " + p.description).lowercased(); let score = tokens.reduce(0) { $0 + (text.contains($1) ? 1 : 0) }
             return (p, score)
-        }.sorted { $0.1 > $1.1 }.prefix(4).map(\.0)
+        }.sorted { $0.1 > $1.1 }.prefix(4).map { $0.0 }
         if recommendations.isEmpty { recommendations = Array(products.prefix(4)) }
     }
 }
